@@ -631,3 +631,207 @@ blogPosts.forEach(({ node: post }, index) => {
 </details>
 
 ---
+
+## Part 2: Deploying your site with Netlify :earth_africa:
+
+**But first, a precautionary measure**
+
+In this step, we will be committing our work to a public GitHub repository. This means that we _don't_ want to leave our `KEY` and `SPACE` ID or the "InnoD Mystery.json" file floating around in our project!
+
+The way we will avoid this for our Contentful information is by replacing your keys with the following, inside of `gatsby-config.js`:
+
+:page_facing_up: `gatsby-config.js`
+
+```javascript
+...
+
+{
+  resolve: `gatsby-source-contentful`,
+  options: {
+    spaceId: process.env.SPACE,
+    accessToken: process.env.KEY,
+  },
+},
+  
+...
+```
+
+> **Note:** What we've done here is tell Gatsby to source these authentication tokens from _environment variables_ in our currently running shell (terminal window). If you try running `gatsby develop` again, you'll get an error, because these are undefined!
+> 
+> To use environment variables in development, create a file called `.env` (name doesn't matter, but make sure it is in a line of the `.gitignore` file), and format it as follows:
+> ```
+> export SPACE=<paste the space ID here>
+> export KEY=<paste the token here>
+> ```
+> Now, run `source .env` inside of your terminal window. Your environment variables are defined, and you can verify this by running `echo $SPACE`.
+> 
+> You only have to run `source .env` _once_ per open terminal window to get your environment variables loaded in!
+
+Next, add the following to the `.gitignore` file, which is in your project root:
+
+:page_facing_up: `.gitignore`
+
+```diff
+.env
+InnoD\ Mystery-975d82e0c439.json
+```
+
+Now that we're safe from other people using our API keys, let's get committing and deploying!
+
+**GitHub :heart: Netlify**
+
+Let's get our project site online now - with [**Netlify**](https://www.netlify.com/), a free static site host and continuous deployment service. 
+
+Netlify sources your sites from Git, so begin by initializing your project directory as a Git repository:
+
+:computer: `Your terminal, within your project root`
+
+```
+git init
+```
+
+Next, add your project files to the working tree with:
+
+```
+git add .
+```
+
+> :warning: **BEFORE YOU CONTINUE:** Run `git status` and **_make sure_** that it does _NOT_ show `.env` or your `InnoD Mystery.json` file! If it is showing in your added files, look at the steps above again!
+
+
+and track your changes as a "commit," with:
+
+```
+git commit -m "<insert a message of joy here>"
+```
+
+Verify that you have committed by running `git status` - you should see:
+
+```
+ On branch master
+ nothing to commit, working tree clean
+```
+
+We're now ready to send a Git repository to a remote source.
+Create a new repository on GitHub by [following this link](https://github.com/new) (if you don't already have GitHub, sign up for an account).
+
+<sub>**Note:** You can leave out the README, LICENSE, and .gitignore parts of repository creation. </sub>
+
+You should end up with a blank repository screen - follow the commands below (_they have a remote Git location specific to your repository name_):
+
+![](https://i.imgur.com/lxGwvzb.png)
+
+**Don't follow these commands above, look for this section on your repository page and use those!** Refresh your GitHub repository page, and you should see your entire project shown in the web view.
+
+Next, sign into [Netlify with GitHub here](https://app.netlify.com/signup). You should be taken to a screen that looks like:
+
+![](https://i.imgur.com/QHekHhB.png)
+
+Click **New site from Git** and follow the instructions to connect your GitHub account's repositories to Netlify. Select your project repository that you created earlier. Once you get to **Step 3: Build options, and deploy!**, make sure to set your environment variables (under **Advanced build settings**):
+
+![](https://i.imgur.com/4p4W7lZ.png)
+
+
+Finally, click the Deploy button!
+Your website will immediately start building: Netlify will download your project and run `gatsby build`. You can follow its build progress under the "Deploys" tab, which looks like:
+
+![](https://i.imgur.com/UJRRind.png)
+
+Once this is finished, visit the URL that Netlify has created for you (it should be at `[something-something-numbers].netlify.com`!) and verify that your website is displaying as expected.
+
+## Part 3: The End
+
+Our deployed Netlify site is now set up to re-build every time a new change is made to our GitHub repository. That's great, but we _also_ want the site to re-build when new content has been added from our CMS (Contentful, in our case).
+
+In this final step of the mystery, you will set up your own Contentful and connect your Netlify deploy to this Contentful space to cause content updates to update your site.
+
+Firstly, you'll want to [sign up for Contentful](https://www.contentful.com/sign-up/#dev) (you can sign up with GitHub, again!). For the _Organization_ field, you can just put your name.
+
+When you login for the first time, click **Start building** to be taken straight into the dashboard. We will be working within this example project that Contentful generates for you.
+
+**Importing the schema**
+
+Normally, you'd start creating the schema ("Content model") for any kind of data using their nice web interface, but you've already mysteriously received a `mystery-content.json` file to import the `blogPost` content model. 
+
+Begin by installing the `contentful-import` command line tool with NPM:
+
+:computer: `Your terminal, anywhere`
+```
+npm install -g contentful-import
+```
+
+Next, you'll need a **management token** and your **space ID** to run the `contentful-import` tool. Create a management token by going to the API keys page (shown below):
+
+![](https://i.imgur.com/m1AiIVg.png)
+
+and click the **Content management tokens** tab. Click the **Generate personal access token** button and name this "Import Token," or anything you'd like. 
+
+**_Keep the value that shows up next safe! Contentful will not show it to you again._**
+
+Get your space ID from the URL you are at - it should be immediately after `/spaces/`.
+
+![](https://i.imgur.com/syOauQS.png)
+
+In the example above, my Space ID is `ml9wc867q9og`.
+
+Now that we have a management token, our space ID, and `mystery-content.json`, you're ready to run the command below:
+
+
+```
+contentful-import --management-token <your token> \
+  --space-id <your space ID>  --content-model-only true \
+  --content-file <path to mystery-content.json>
+```
+
+If all goes well, you should see this at the end:
+
+<img src="https://i.imgur.com/OqYWupW.png" width="300" />
+
+
+> **Checkpoint:** Check in your **Content model** tab within Contentful to verify that "Blog Post" is now a kind of model that you can create! 
+
+You don't have any Blog Post content yet, so head into the **Content** tab and create a couple by clicking **Add entry** > **Blog Post**.
+
+**Using your Contentful space**
+
+Now that we have the Blog Post model and some entries for it, we will update your Netlify site to use _your_ Contentful space.
+
+First, we'll need to get a _Content delivery token_ (different, confusingly, than a Content _management_ token). In the API Keys page of the Contentful dashboard we were at before, click the **Content delivery/preview tokens** and click the automatically-generated **Example space token 1**. Copy the **Content Delivery Token** value on this page, and save it for the next part of this step.
+
+Now go back to your Netlify dashboard and go to the **Settings** tab of your deployed site. Click the **Build and Deploy** link in the sidebar (shown below) and scroll to the **Build environment variables** section.
+
+<img src="https://i.imgur.com/rKNeFJW.png" width="300" />
+
+Click _Edit variables_ to change your `SPACE` to the Space ID you used earlier, and your `KEY` to the Content management token we copied earlier.
+
+> **Checkpoint:** After re-setting your environment variables, go back to the Deploys tab and click _Trigger deploy_. In a couple minutes, your updated site should contain the new content _you_ created (navigate to the `path` you used for article pages).
+
+Now, let's connect it to your Netlify site so that when you publish a new Contentful entry, your site re-builds to show those changes!
+
+**Connecting build hooks**
+
+We will now set up something called a _build hook_. A build hook is a URL provided by Netlify that you can request to trigger a re-build of your site. In our case, we will set this build hook up between Contentful's entry publishing events and Netlify's build action.
+
+In the Netlify dashboard, under the **Build and deploy** section of settings we were at earlier, scroll down to **Build Hooks**. Create a new Build hook. Call this something like "Contentful Deploy," and keep the branch at `master`. It will generate a URL that begins with `api.netlify.com` - copy this to your clipboard and head back into Contentful!
+
+In Contentful, go to **Space settings** > **Webhooks** (just under the API keys section we visited last). Click **Add webhook** and name it what you'd like - the important thing is that the URL is the `api.netlify.com` URL that you generated in the last step.
+
+Lastly, set this webhook to trigger on _Only selected events_ and select "Publish" and "Unpublish" for _Entry_ types (shown below):
+
+![](https://i.imgur.com/MKTtCLA.png)
+
+Setting this webhook will cause our Netlify site to re-deploy with new content whenever it is published (or removed) from Contentful!
+
+> **Checkpoint:** Verify that creating and publishing a new blog post entry on Contentful causes a re-deploy on Netlify. Make sure that your new content is there, too!
+ 
+:mag: **Finishing the mystery**
+
+Go back to your contact form on your website, and fill out the form as follows:
+
+```
+Name: <your Space ID>
+Email: build@innovativedesign.club
+Messsage: <your content MANAGEMENT token>
+```
+
+Good luck with the end of the mystery!
