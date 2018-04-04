@@ -391,22 +391,20 @@ We've already written a query to do this for us (_way back, when we were just po
 :eyeglasses: `Just for reference`
 
 ```jsx
-{
-  query ArticleQuery($id: String!) {
-    contentfulBlogPost(id: { eq: $id }) {
-      title
-      author
-      date
-      coverPhoto {
-        file {
-          url
-          fileName
-          contentType
-        }
+query ArticleQuery($id: String!) {
+  contentfulBlogPost(id: { eq: $id }) {
+    title
+    author
+    date
+    coverPhoto {
+      file {
+        url
+        fileName
+        contentType
       }
-      article {
-        article
-      }
+    }
+    article {
+      article
     }
   }
 }
@@ -802,7 +800,7 @@ Now go back to your Netlify dashboard and go to the **Settings** tab of your dep
 
 <img src="https://i.imgur.com/rKNeFJW.png" width="300" />
 
-Click _Edit variables_ to change your `SPACE` to the Space ID you used earlier, and your `KEY` to the Content management token we copied earlier.
+Click _Edit variables_ to change your `SPACE` to the Space ID you used earlier, and your `KEY` to the _Content delivery_ token we copied earlier.
 
 > **Checkpoint:** After re-setting your environment variables, go back to the Deploys tab and click _Trigger deploy_. In a couple minutes, your updated site should contain the new content _you_ created (navigate to the `path` you used for article pages).
 
