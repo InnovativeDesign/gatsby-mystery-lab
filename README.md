@@ -237,7 +237,7 @@ _Bonus points for using object destructuring._
 graphql(`
   ...
 `).then((queryResult) => {
-  let blogPosts = queryResult.data.edges;
+  let blogPosts = queryResult.data.allContentfulBlogPost.edges;
 });
 
 ```
