@@ -676,6 +676,8 @@ InnoD\ Mystery-975d82e0c439.json
 
 Now that we're safe from other people using our API keys, let's get committing and deploying!
 
+> :warning: Since Netlify won't be seeing our "Mystery.json" file in the GitHub repository, you should also comment out (or remove) the Google Sheets source we placed in `gatsby-config.js` in Part 1!
+
 **GitHub :heart: Netlify**
 
 Let's get our project site online now - with [**Netlify**](https://www.netlify.com/), a free static site host and continuous deployment service. 
