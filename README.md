@@ -382,7 +382,7 @@ class ArticleTemplate extends React.Component {
 export default ArticleTemplate;
 ```
 
-**Checkpoint:** Try re-running `gatsby develop` now, and navigate to `localhost:8000/articles/0` and `localhost:8000/articles/1`. You should see the same `ArticleTemplate` components rendered!
+**Checkpoint:** Try re-running `gatsby develop` now, and navigate to `localhost:8000/article/0` and `localhost:8000/article/1`. You should see the same `ArticleTemplate` components rendered!
 
 Now, we'll export a GraphQL query from `ArticleTemplate` to query for _specific_ information about this (singular) article.
 
@@ -438,7 +438,7 @@ export const pageQuery = graphql`
 
 > <sub>**Optional sub-note:** Wondering why we're not using parentheses around this `graphql` statement? It's because this is actually _not_ the `graphql` function we saw earlier; it's a **[tagged template](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates)** of a template literal (string with backticks).</sub>
 
-Now try visiting `localhost:8000/articles/0` and open up your handy React Developer Tools (`Ctrl or Command-Shift-J`) to inspect the `props` of your `ArticleTemplate`.
+Now try visiting `localhost:8000/article/0` and open up your handy React Developer Tools (`Ctrl or Command-Shift-J`) to inspect the `props` of your `ArticleTemplate`.
 
 **Hint:** Use the eyedropper tool and click on your "I'm an article" message!
 
@@ -516,7 +516,7 @@ class ArticleTemplate extends React.Component {
 
 **Changing page locations**
 
-Let's change our blog post URL's from `/articles/[some index number]` to `/articles/[the date and time]`.
+Let's change our blog post URL's from `/article/[some index number]` to `/article/[the date and time]`.
 
 **First: which file did we set where an _article's_ page URL would be?**
 
@@ -589,7 +589,7 @@ Restart your Gatsby development server to see your changes!
 
 **Bonus part (optional):**
 
-Make your page locations represent a part of the title, but separated by dashes - something like `/articles/longer-subway-trains-high-tech-signals`. This dash-separated string is sometimes called a "slug," and can be generated from the title of your article.
+Make your page locations represent a part of the title, but separated by dashes - something like `/article/longer-subway-trains-high-tech-signals`. This dash-separated string is sometimes called a "slug," and can be generated from the title of your article.
 
 Find (or create!) a function to generate slugs from strings, and generate your articles at these slug-ified paths.
 
